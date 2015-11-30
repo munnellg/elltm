@@ -5,6 +5,7 @@ import logging
 import gensim
 from optparse import OptionParser
 from docs import config
+from lib import tokenizer
 
 logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO)
 
@@ -71,17 +72,9 @@ def load_corpus(fnames):
 
     return corpus
 
-# tokenize input string into words and remove stopwords
-def tokenize(text):
-    aposeq = r"[`='\(\)_]+|[!.\?\*:,]"
-
-    no_mark = re.sub(aposeq, '', text)
-    stopwords = set(nltk.corpus.stopwords.words(config.stop_word_list)) if config.use_stop_word_list else []
-    return [word.lower().encode('utf-8') for word in nltk.tokenize.word_tokenize(no_mark.decode('utf-8')) if word.lower().encode('utf-8') not in stopwords ]
-
 # Tokenize an array of strings that represents our corpus
 def tokenize_corpus(corpus):
-    return [tokenize(document) for document in corpus]
+    return [tokenizer.tokenize(document) for document in corpus]
 
 # Generate and return a dictionary. Also saves dictionary to file
 def gen_dictionary(tokens, dict_out):
