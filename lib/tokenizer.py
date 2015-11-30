@@ -4,7 +4,7 @@ from docs import config
 
 # tokenize input string into words and remove stopwords
 def tokenize(text):
-    aposeq = r"[`='\(\)_]+|[!.\?\*:,]"
+    aposeq = r"[`='\(\)_]+|[\"\;\-!.\?\*:,]"
 
     no_mark = re.sub(aposeq, '', text)
     stopwords = set(nltk.corpus.stopwords.words(config.stop_word_list)) if config.use_stop_word_list else []

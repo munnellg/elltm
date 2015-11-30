@@ -1,7 +1,8 @@
 import sys
 import logging
 import gensim
-from lib import tokenizer
+from docs import config
+from lib.metrics import build_similarity_matrix
 
 logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO)
 
@@ -25,28 +26,22 @@ def load_model(fname):
 
     return model
 
-def process_query(query, model, dictionary):
-    tokens = tokenizer.tokenize(query)    
-    print dictionary.doc2bow(tokens)
-
 if __name__ == "__main__":
     
+    matches = []
+
     if len(sys.argv) < 3:
-        print "Usage: view_model.py <dictionary> <model>"
+        print "Usage: compare_models.py <model1> <model2>"
         exit()
 
-    dictionary = gensim.corpora.dictionary.Dictionary.load(sys.argv[1])
-    model = load_model(sys.argv[2])
+    model1 = load_model(sys.argv[1])
+    model2 = load_model(sys.argv[2])
 
+    matrix = build_similarity_matrix(model1, model2, config.similarity_depth)
 
-    topics = []
-    for i in range(0, model.num_topics):
-        topics.append(model.show_topic(i, topn=20))
+    for i in matrix:
+        matches.append(i.index(max(i)))
 
-
-    for i in topics:
-        print i
-        print ""
-#    user_input = raw_input(">>> ")
-
-#    process_query(user_input, model, dictionary)
+    for i in range(0, len(matches)):
+        print("Topic M1 {} | Topic M2 {} | Score: {}".format(i, matches[i], matrix[i][matches[i]]))
+    

@@ -2,3 +2,4 @@ corpus/*
 *.model*
 *.dict
 *.pyc
+docs/config.py
