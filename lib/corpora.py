@@ -1,5 +1,6 @@
 import gensim 
 import logging
+import random
 import bz2
 from lib import tokenizer
 
@@ -31,6 +32,20 @@ class CompressedCorpus(object):
         for line in bz2.BZ2File(self.ifile, 'r'):
             yield tokenizer.tokenize(line)
 
+class SubsampleCorpus(object):
+
+    def __init__(self, corpus_reader, selection_factor):
+        self.corpus_reader = corpus_reader
+        self.selection_factor = selection_factor
+        self.idx = -1
+
+    def __iter__(self):
+        for doc in self.corpus_reader:
+            self.idx += 1
+            if self.selection_factor[self.idx] == 0:
+                continue
+            yield doc
+
 class VectorCorpus(object):
 
     def __init__(self, corpus_reader, dictionary):
@@ -41,10 +56,20 @@ class VectorCorpus(object):
         for doc in self.corpus_reader:
             yield self.dictionary.doc2bow(doc)
 
+def load_subsample_corpus(fnames, selection_factor):
+    reader = load_corpus(fnames)
+
+    return SubsampleCorpus(reader, selection_factor)
+
+def load_subsample_vector_corpus(fnames, dictionary, selection_factor):
+    subsample = load_subsample_corpus(fnames, selection_factor)
+    return VectorCorpus(subsample, dictionary)
+
 def load_vector_corpus(fnames, dictionary):
     reader = load_corpus(fnames)
 
     return VectorCorpus(reader, dictionary)
+
 # Loads corpus as line corpus if fnames has one element, otherwise as
 # document corpus
 def load_corpus(fnames):

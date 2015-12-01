@@ -3,7 +3,7 @@ code_lda = "lda"
 code_lsa = "lsa"
 code_lsi = "lsi"
 
-# Default values used by the script
+# Default values used by the generator scripts
 default_num_topics = 2
 default_dictionary_out = "out.dict"
 default_corpus_out = "out.mm"
@@ -19,6 +19,9 @@ default_compare_depth = 20
 
 # view settings
 default_display_depth = 10
+
+# subsample settings
+default_reduction_rate = 0.7
 
 # Settings for building the LDA model
 lda_settings = {
