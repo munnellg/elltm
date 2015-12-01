@@ -1,5 +1,9 @@
 corpus/*
 *.model*
-*.dict
+*.lsa*
+*.lda*
+*.lsi*
+*.dict*
+*.mm*
 *.pyc
 docs/config.py

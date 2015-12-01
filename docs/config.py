@@ -6,6 +6,7 @@ code_lsi = "lsi"
 # Default values used by the script
 default_num_topics = 2
 default_dictionary_out = "out.dict"
+default_corpus_out = "out.mm"
 default_model_out = "out.model"
 default_model_type = code_lda
 
@@ -16,11 +17,14 @@ use_stop_word_list = True
 # Comparison settings
 default_compare_depth = 20
 
+# view settings
+default_display_depth = 10
+
 # Settings for building the LDA model
 lda_settings = {
     "distributed" : False, 
     "chunksize" : 2000, 
-    "passes" : 1, 
+    "passes" : 10, 
     "update_every" : 1, 
     "alpha" : 'symmetric', 
     "eta" : None, 
