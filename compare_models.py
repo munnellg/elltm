@@ -2,7 +2,7 @@ import sys
 import logging
 import gensim
 from docs import config
-from lib.metrics import build_similarity_matrix
+from lib.metrics import get_model_agreement, print_matrix, test_hungarian
 
 logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO)
 
@@ -37,11 +37,16 @@ if __name__ == "__main__":
     model1 = load_model(sys.argv[1])
     model2 = load_model(sys.argv[2])
 
-    matrix = build_similarity_matrix(model1, model2, config.similarity_depth)
+    test_hungarian()
 
-    for i in matrix:
-        matches.append(i.index(max(i)))
+    agreement = get_model_agreement(model1, model2, config.similarity_depth)
 
-    for i in range(0, len(matches)):
-        print("Topic M1 {} | Topic M2 {} | Score: {}".format(i, matches[i], matrix[i][matches[i]]))
+
+#    matrix = build_similarity_matrix(model1, model2, config.similarity_depth)
+
+#    for i in matrix:
+#        matches.append(i.index(max(i)))
+
+#    for i in range(0, len(matches)):
+#        print("Topic M1 {} | Topic M2 {} | Score: {}".format(i, matches[i], matrix[i][matches[i]]))
     
