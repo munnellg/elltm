@@ -14,7 +14,7 @@ stop_word_list = 'english'
 use_stop_word_list = True
 
 # Comparison settings
-similarity_depth = 20
+default_compare_depth = 20
 
 # Settings for building the LDA model
 lda_settings = {
