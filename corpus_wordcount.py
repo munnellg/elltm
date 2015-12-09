@@ -1,18 +1,19 @@
 import logging
+import gensim
 from docs import config
 from optparse import OptionParser
-from lib.corpora import gen_dictionary, load_corpus
+from lib.corpora import corpus_word_count
 
 logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO)
 
 # Build this program's option parser
 def build_opt_parser():
-    usage = "usage: %prog [options] <filename> [, <filename>, ...]"
+    usage = "usage: %prog [options] <dictionary> <filename> [, <filename>, ...]"
     parser = OptionParser(usage=usage)
 
-    parser.add_option("-o", "--dictionary-out", dest="dict_out",
-                      default=config.default_dictionary_out, metavar="FILE",
-                      help="Output file for the dictionary generated from input files"
+    parser.add_option("-d", "--dictionary", dest="dictionary",
+                      default=None,
+                      help="Optional dictionary parameter for parsing MM corpus files"
     )
 
     return parser
@@ -29,15 +30,16 @@ def parse_arguments(parser):
 
 # Main function
 def main():
+
     parser = build_opt_parser()
 
     (options, args) = parse_arguments(parser)
-
-    corpus = load_corpus(args)
     
-    dictionary = gen_dictionary(corpus)
+    dictionary = gensim.corpora.Dictionary.load(options.dictionary) if options.dictionary else options.dictionary
 
-    dictionary.save(options.dict_out)
+    word_count = corpus_word_count(args, dictionary)
+
+    logging.info("Word Count: {}".format(word_count))
 
 if __name__ == "__main__":
     main()

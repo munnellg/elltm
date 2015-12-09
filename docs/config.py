@@ -22,6 +22,13 @@ default_display_depth = 10
 
 # subsample settings
 default_reduction_rate = 0.7
+default_min_reduction_rate = 0.1
+default_max_reduction_rate = 1.0
+default_reduction_step = 0.1
+default_sample_prefix = "subsample"
+default_num_subsamples = 1
+
+default_line_out_file="linecorpus.txt.bz2"
 
 # Settings for building the LDA model
 lda_settings = {

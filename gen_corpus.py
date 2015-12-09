@@ -11,7 +11,7 @@ def build_opt_parser():
     usage = "usage: %prog [options] <dictionary> <filename> [, <filename>, ...]"
     parser = OptionParser(usage=usage)
 
-    parser.add_option("-c", "--corpus-out", dest="corpus_out",
+    parser.add_option("-o", "--corpus-out", dest="corpus_out",
                       default=config.default_corpus_out, metavar="FILE",
                       help="Output file for the corpus generated from input files"
     )

@@ -4,13 +4,13 @@ import gensim
 from optparse import OptionParser
 from docs import config
 from lib.models import load_model
-from lib.metrics import get_model_agreement, print_matrix, get_similar_topics
+from lib.metrics import get_model_agreement
 
 logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO)
 
 # Build this program's option parser
 def build_opt_parser():
-    usage = "usage: %prog [options] <model1> <model2>"
+    usage = "usage: %prog [options] <gold> <model> [, <model>...]"
     parser = OptionParser(usage=usage)
     parser.add_option("-d", "--depth", dest="depth",
                       default=config.default_compare_depth, type="int",
@@ -43,14 +43,26 @@ def compare_models(f1, f2, depth):
     agreement = get_model_agreement(model1, model2, depth)
 
     # Display the result
-    logging.info("Model Agreement: {}".format(agreement))
+    logging.info("{} & {} Agreement: {}".format(f1, f2, agreement))
+
+    return agreement
+
+def compute_stability(gold, models, depth):
+    average = 0
+
+    for model in models:
+        average += compare_models(gold, model, depth)
+
+    return average/len(models)
 
 # Main function. Entry point for program
 def main():
     parser = build_opt_parser()
     (options, args) = parse_arguments(parser)
 
-    compare_models(args[0], args[1], options.depth)
+    stability = compute_stability(args[0], args[1:], options.depth)
+    logging.info("Stability: {}".format(stability))
+    sys.stdout.write("{}".format(stability))
 
 if __name__ == "__main__":
     main()

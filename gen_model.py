@@ -10,11 +10,11 @@ logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=lo
 def build_opt_parser():
     usage = "usage: %prog [options] <filename> [, <filename>, ...]"
     parser = OptionParser(usage=usage)
-    parser.add_option("-m", "--model-out", dest="model_out",
+    parser.add_option("-o", "--model-out", dest="model_out",
                       default=config.default_model_out, metavar="FILE",
                       help="Output file for the model generated from corpus"
                   )
-    parser.add_option("-M", "--model-type", dest="model_type",
+    parser.add_option("-m", "--model-type", dest="model_type",
                       default=config.default_model_type,
                       help="The type of model the program should produce. Valid inputs are lsa, lsi, lda"
     )

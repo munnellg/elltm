@@ -1,6 +1,8 @@
 import gensim 
 import logging
 import random
+import math
+import random
 import bz2
 from lib import tokenizer
 
@@ -56,6 +58,26 @@ class VectorCorpus(object):
         for doc in self.corpus_reader:
             yield self.dictionary.doc2bow(doc)
 
+def corpus_word_count(files, dictionary=None):
+    corpus = load_vector_corpus(files, dictionary) if dictionary else load_corpus(files)
+
+    total = 0
+
+    for line in corpus:
+        total += len(line)
+
+    return total
+
+def count_corpus_docs(files):
+    corpus = load_corpus(files)
+
+    ndocs = -1
+
+    for ndocs, _ in enumerate(corpus):
+        pass
+
+    return ndocs + 1
+
 def load_subsample_corpus(fnames, selection_factor):
     reader = load_corpus(fnames)
 
@@ -69,6 +91,20 @@ def load_vector_corpus(fnames, dictionary):
     reader = load_corpus(fnames)
 
     return VectorCorpus(reader, dictionary)
+
+def gen_random_subsample_corpus (files, dictionary, ndocs, reduction_factor):
+
+    nselected = int(math.ceil(ndocs*reduction_factor))
+
+    selection_array = ([1]*nselected) + ([0]*(ndocs - nselected))
+    
+    random.shuffle(selection_array)
+
+    logging.info("Adding {}/{} random docs to subsample".format(nselected, ndocs))
+
+    corpus = load_subsample_vector_corpus(files, dictionary, selection_array)
+
+    return corpus
 
 # Loads corpus as line corpus if fnames has one element, otherwise as
 # document corpus
@@ -88,5 +124,5 @@ def load_corpus(fnames):
 
 # Generate and return a dictionary. Also saves dictionary to file
 def gen_dictionary(corpus):
-    dictionary = gensim.corpora.dictionary.Dictionary(corpus)
+    dictionary = gensim.corpora.dictionary.Dictionary(corpus, prune_at=None)
     return dictionary
